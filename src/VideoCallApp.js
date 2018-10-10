@@ -76,7 +76,6 @@ class VideoCallApp extends React.Component {
   render() {
     const { apiKey, sessionId, token } = this.props;
     const { error, connection, publishVideo } = this.state;
-    debugger;
     return (
       <div>
         <div id="sessionStatus">Session Status: {connection}</div>

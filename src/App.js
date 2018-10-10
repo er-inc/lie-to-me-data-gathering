@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { BrowserRouter, Route, Link } from 'react-router-dom';
 
 import VideoCallApp from './VideoCallApp.js'
@@ -29,17 +28,23 @@ class App extends React.Component {
   }
 
   render() {
+    const location = {
+      pathname: `/session/${this.state.sessionId}`,
+      state: { token: this.token(), apiKey: this.apiKey() }
+    }
     return (
       <BrowserRouter>
         <div className="App">
           <script src="//static.opentok.com/v2/js/opentok.min.js"></script>
           <Route exact={true} path="/" render={() => (
-            <header className="App-header"> 
-              <img src={logo} alt="logo" />
-              <img src={true_logo} alt="logo" />
+            <header className="App-header">
+              <div>
+                <img src={logo} alt="logo" />
+                <img src={true_logo} alt="logo" />
+              </div>
               <div className="component-wrapper">
                 <input type="text" value={this.state.sessionId} onChange={evt => this.updateInputvalue(evt)} />
-                <Link to='/session'>
+                <Link to={ location }>
                   <button className="button">
                     Search
                   </button>
@@ -49,8 +54,8 @@ class App extends React.Component {
           )}/>
           <div>
             <Route
-              path="/session"
-              render={() => <VideoCallApp sessionId={this.state.sessionId} apiKey={this.apiKey()} token={this.token()} />}
+              path="/session/:sessionId"
+              render={ ({ match, location }) => <VideoCallApp sessionId={match.params.sessionId} apiKey={location.state.apiKey} token={location.state.token} /> }
             />
           </div>
         </div>
@@ -59,18 +64,4 @@ class App extends React.Component {
   }
 }
 
-export default App;
-
-class HelloWorld extends React.Component {
-  render() {
-    return (
-      <div>
-        {this.props.otherProp}
-      </div>
-    )
-  }
-}
-
-HelloWorld.propTypes = {
-  credentials: PropTypes.string
-};
+export default App
