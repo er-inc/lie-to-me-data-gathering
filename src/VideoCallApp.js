@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { OTSession, OTPublisher, OTStreams, OTSubscriber } from 'opentok-react';
+import { OTSession, OTPublisher, OTStreams, OTSubscriber, preloadScript } from 'opentok-react';
 
 class VideoCallApp extends React.Component {
   constructor(props) {
@@ -74,7 +74,7 @@ class VideoCallApp extends React.Component {
   };
 
   render() {
-    const { apiKey, sessionId, token } = this.props.credentials;
+    const { apiKey, sessionId, token } = this.props;
     const { error, connection, publishVideo } = this.state;
     debugger;
     return (
@@ -121,4 +121,4 @@ VideoCallApp.propTypes = {
   token: PropTypes.string
 };
 
-export default VideoCallApp;
+export default preloadScript(VideoCallApp);
