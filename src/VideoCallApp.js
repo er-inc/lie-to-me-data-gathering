@@ -50,6 +50,7 @@ class VideoCallApp extends React.Component {
   }
 
   onSessionError = error => {
+    console.log('Session Error: ', error)
     this.setState({ error });
   };
 

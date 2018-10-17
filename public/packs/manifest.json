@@ -1,0 +1,10 @@
+{
+  "application.js": "/packs/application-f8c8e02a1c2d490c1b09.js",
+  "application.js.map": "/packs/application-f8c8e02a1c2d490c1b09.js.map",
+  "hello_react.js": "/packs/hello_react-ac27de124761cc520f55.js",
+  "hello_react.js.map": "/packs/hello_react-ac27de124761cc520f55.js.map",
+  "server_rendering.js": "/packs/server_rendering-632eaeaa2cb4bdb93999.js",
+  "server_rendering.js.map": "/packs/server_rendering-632eaeaa2cb4bdb93999.js.map",
+  "video_call_app.js": "/packs/video_call_app-d8183f425dc188158e2f.js",
+  "video_call_app.js.map": "/packs/video_call_app-d8183f425dc188158e2f.js.map"
+}
