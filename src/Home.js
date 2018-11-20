@@ -17,7 +17,7 @@ class Home extends React.Component {
         <div className="component-wrapper">
           <Link to='/start'>
             <button className="button">
-              Lets get started !
+             ¡ Empecemos !
             </button>
           </Link>
         </div>
