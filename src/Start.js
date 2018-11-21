@@ -1,12 +1,16 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
+import axios from 'axios';
 
 class Start extends React.Component {
   constructor() {
     super();
     this.state = {
       conditionsAccepted: false,
-      sessionId: ''
+      sessionId: '',
+      requestFulfilled: false,
+      token: null,
+      apiKey: null
     }
   }
 
@@ -17,24 +21,29 @@ class Start extends React.Component {
   }
 
   startExperiment() {
-      console.log("StartExperiment called")
     this.setState({
       conditionsAccepted: true
     })
   }
 
-  apiKey() {
-    return('46178502')
-  }
-
-  token() {
-    return('T1==cGFydG5lcl9pZD00NjE3ODUwMiZzaWc9MDI4NmE5MzE4YzY1MWZiYTlkMDU5MjcwYWJjMjk1MWIzODBmMTE4MTpzZXNzaW9uX2lkPTJfTVg0ME5qRTNPRFV3TW41LU1UVXpPVEV6TmpVME5qa3pNSDVNZWtGWEwzRkhXakJOUmtKVFYwcHRSR2xPUVUxbWFuWi1mZyZjcmVhdGVfdGltZT0xNTM5MTM2NTYyJm5vbmNlPTAuMTYyODk4NDU5MTM2NzkwOCZyb2xlPXB1Ymxpc2hlciZleHBpcmVfdGltZT0xNTM5NzQxMzY0JmluaXRpYWxfbGF5b3V0X2NsYXNzX2xpc3Q9')
+  makeStartRequests() {
+      //TODO: Replace with correct URL
+    axios.get('https://api.github.com/users/danielaRiesgo')
+      .then(response => this.setState({
+          //username: response.data.name,
+          requestFulfilled: true,
+          apiKey: '46178502',
+          token: 'T1==cGFydG5lcl9pZD00NjE3ODUwMiZzaWc9MDI4NmE5MzE4YzY1MWZiYTlkMDU5MjcwYWJjMjk1MWIzODBmMTE4MTpzZXNzaW9uX2lkPTJfTVg0ME5qRTNPRFV3TW41LU1UVXpPVEV6TmpVME5qa3pNSDVNZWtGWEwzRkhXakJOUmtKVFYwcHRSR2xPUVUxbWFuWi1mZyZjcmVhdGVfdGltZT0xNTM5MTM2NTYyJm5vbmNlPTAuMTYyODk4NDU5MTM2NzkwOCZyb2xlPXB1Ymxpc2hlciZleHBpcmVfdGltZT0xNTM5NzQxMzY0JmluaXRpYWxfbGF5b3V0X2NsYXNzX2xpc3Q9'
+      }))
   }
 
   render() {
     const location = {
-      pathname: `/session/${this.state.sessionId}`,
-      state: { token: this.token(), apiKey: this.apiKey() }
+      pathname: `/session/${this.state.sessionId}/instructions`,
+      state: { token: this.state.token, apiKey: this.state.apiKey }
+    }
+    if (this.state.requestFulfilled) {
+      return <Redirect to={ location } />;
     }
     return (
       <div>
@@ -61,11 +70,9 @@ class Start extends React.Component {
             <h2>¡Gracias por participar!</h2>
             <p>Ingresá el código que te enviamos para esta sesión:</p>
             <input type="text" value={this.state.sessionId} placeholder={"Id de Sesión"} onChange={evt => this.updateInputvalue(evt)} />
-            <Link to={ location }>
-              <button className="button">
-              Start
-              </button>
-            </Link>
+            <button className="button" onClick={() => this.makeStartRequests()}>
+            Ir
+            </button>
           </div>
         )}
       </div>
