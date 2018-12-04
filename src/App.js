@@ -20,11 +20,11 @@ class App extends React.Component {
             <Switch>
               <Route path="/start" component={Start}/>
               <Route
-                path="/session/:sessionId/instructions"
-                render={ ({ match, location }) => <Instructions sessionId={match.params.sessionId} apiKey={location.state.apiKey} token={location.state.token} isInterviewer={true} /> }
+                path="/session/:sessionId/:role/instructions"
+                render={ ({ match, location }) => <Instructions sessionId={location.state.sessionId} apiKey={location.state.apiKey} token={location.state.token} isInterviewer={match.params.role=="interviewer"} /> }
               />
               <Route
-                path="/session/:sessionId"
+                path="/session/:sessionId/:role"
                 render={ ({ match, location }) => <VideoCallApp sessionId={match.params.sessionId} apiKey={location.state.apiKey} token={location.state.token} /> }
               />
             </Switch>

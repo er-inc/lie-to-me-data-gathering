@@ -14,7 +14,8 @@ class Start extends React.Component {
       requestFulfilled: false,
       sessionId: null,
       token: null,
-      apiKey: null
+      apiKey: null,
+      isInterviewer: null
     }
   }
 
@@ -30,33 +31,34 @@ class Start extends React.Component {
     });
   }
 
-  startExperiment() {
+  acceptExperiment() {
     this.setState({
       conditionsAccepted: true
     })
   }
 
   makeStartRequests() {
-    this.setState({requestInProgress: true})
+    this.setState({ requestInProgress: true })
       //TODO: Replace with correct URL
     axios.get('https://api.github.com/users/danielaRiesgo')
       .then(response => this.setState({
-          //username: response.data.name,
           requestInProgress: false,
           requestFulfilled: true,
+          //username: response.data.name,
           sessionId: '2_MX40NjE3ODUwMn5-MTU0Mzk1MjA4MjQ0Mn5Gb2xwYSt1L3NvOUNkUHZ0UDhYanE5cmZ-fg',
           apiKey: '46178502',
-          token: 'T1==cGFydG5lcl9pZD00NjE3ODUwMiZzaWc9MzFlMDlkYWNiNDljZWFiMTE4MjMzYTBiMGU0ZDVkYzU4ODQ3YWM2YjpzZXNzaW9uX2lkPTJfTVg0ME5qRTNPRFV3TW41LU1UVTBNemsxTWpBNE1qUTBNbjVHYjJ4d1lTdDFMM052T1VOa1VIWjBVRGhZYW5FNWNtWi1mZyZjcmVhdGVfdGltZT0xNTQzOTUyMDk1Jm5vbmNlPTAuNTcyMjQ3OTIwNTk5OTQ3MSZyb2xlPXB1Ymxpc2hlciZleHBpcmVfdGltZT0xNTQ2NTQ0MDk0JmluaXRpYWxfbGF5b3V0X2NsYXNzX2xpc3Q9'
+          token: 'T1==cGFydG5lcl9pZD00NjE3ODUwMiZzaWc9MzFlMDlkYWNiNDljZWFiMTE4MjMzYTBiMGU0ZDVkYzU4ODQ3YWM2YjpzZXNzaW9uX2lkPTJfTVg0ME5qRTNPRFV3TW41LU1UVTBNemsxTWpBNE1qUTBNbjVHYjJ4d1lTdDFMM052T1VOa1VIWjBVRGhZYW5FNWNtWi1mZyZjcmVhdGVfdGltZT0xNTQzOTUyMDk1Jm5vbmNlPTAuNTcyMjQ3OTIwNTk5OTQ3MSZyb2xlPXB1Ymxpc2hlciZleHBpcmVfdGltZT0xNTQ2NTQ0MDk0JmluaXRpYWxfbGF5b3V0X2NsYXNzX2xpc3Q9',
+          isInterviewer: true
       }))
   }
 
   render() {
     const location = {
-      pathname: `/session/${this.state.sessionCode}/instructions`,
+      pathname: `/session/${this.state.sessionCode}/${this.state.isInterviewer ? 'interviewer' : 'interviewee'}/instructions`,
       state: { token: this.state.token, apiKey: this.state.apiKey, sessionId: this.state.sessionId }
     }
     if (this.state.requestFulfilled) {
-      return <Redirect to={ location } />;
+      return <Redirect push to={ location } />;
     }
     return (
       <div>
@@ -73,7 +75,7 @@ class Start extends React.Component {
             <p>
             Al hacer click en el siguiente botón está aceptando estas condiciones.
             </p>
-            <button className="button" onClick={() => this.startExperiment()}>
+            <button className="button" onClick={() => this.acceptExperiment()}>
             Empezar
             </button>
           </div>
@@ -86,11 +88,13 @@ class Start extends React.Component {
                 value={this.state.sessionCode}
                 placeholder={"Código de Sesión"}
                 onChange={evt => this.updateSessionInputValue(evt.target.value)}
+                disabled={this.state.requestInProgress}
                 width={100} />
             <input type="text"
                 value={this.state.email}
                 placeholder={"Email"}
                 onChange={evt => this.updateEmailInputValue(evt.target.value)}
+                disabled={this.state.requestInProgress}
                 width={200} />
             <button className="button"
                 disabled = {!this.state.email || !this.state.sessionCode}

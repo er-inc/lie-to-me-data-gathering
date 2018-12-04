@@ -96,7 +96,7 @@ class VideoCallApp extends React.Component {
             {publishVideo ? 'Disable' : 'Enable'} Video
           </button>
           <OTPublisher
-            properties={{ publishVideo, width: 100, height: 100, }}
+            properties={{ publishVideo, width: 1024, height: 720, }}
             onPublish={this.onPublish}
             onError={this.onPublishError}
             eventHandlers={this.publisherEventHandlers}
