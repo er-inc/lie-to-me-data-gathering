@@ -21,7 +21,7 @@ class App extends React.Component {
               <Route path="/start" component={Start}/>
               <Route
                 path="/session/:sessionId/:role/instructions"
-                render={ ({ match, location }) => <Instructions sessionId={location.state.sessionId} apiKey={location.state.apiKey} token={location.state.token} isInterviewer={match.params.role=="interviewer"} /> }
+                render={ ({ match, location }) => <Instructions sessionId={location.state.sessionId} apiKey={location.state.apiKey} token={location.state.token} isInterviewer={match.params.role==="interviewer"} /> }
               />
               <Route
                 path="/session/:sessionId/:role"
