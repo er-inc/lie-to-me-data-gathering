@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Home from './Home.js';
 import Start from './Start.js';
 import Instructions from './Instructions.js';
-import VideoCallApp from './VideoCallApp.js';
+import Questioning from './Questioning.js';
 
 import './App.css';
 
@@ -25,7 +25,7 @@ class App extends React.Component {
               />
               <Route
                 path="/session/:sessionId/:role"
-                render={ ({ match, location }) => <VideoCallApp sessionId={match.params.sessionId} apiKey={location.state.apiKey} token={location.state.token} /> }
+                render={ ({ match, location }) => <Questioning sessionId={match.params.sessionId} apiKey={location.state.apiKey} token={location.state.token} /> }
               />
             </Switch>
           </div>

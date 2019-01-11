@@ -51,7 +51,8 @@ class VideoCallApp extends React.Component {
 
   onSessionError = error => {
     console.log('Session Error: ', error)
-    this.setState({ error });
+    this.setState({ error: error,
+                    connection: "Failed" });
   };
 
   onPublish = () => {
@@ -59,7 +60,7 @@ class VideoCallApp extends React.Component {
   };
 
   onPublishError = error => {
-    this.setState({ error });
+    this.setState({ error: error });
   };
 
   onSubscribe = () => {
@@ -67,7 +68,7 @@ class VideoCallApp extends React.Component {
   };
 
   onSubscribeError = error => {
-    this.setState({ error });
+    this.setState({ error: error });
   };
 
   toggleVideo = () => {
@@ -80,11 +81,11 @@ class VideoCallApp extends React.Component {
     return (
       <div>
         <div id="sessionStatus">Session Status: {connection}</div>
-        {error ? (
-          <div className="error">
-            <strong>Error:</strong> {error}
+        { error && (
+          <div>
+            <strong>Error:</strong> { JSON.stringify(error) }
           </div>
-        ) : null}
+        )}
         <OTSession
           apiKey={apiKey}
           sessionId={sessionId}
@@ -103,7 +104,7 @@ class VideoCallApp extends React.Component {
           />
           <OTStreams>
             <OTSubscriber
-              properties={{ width: 1024, height: 720 }}
+              properties={{ width: 860, height: 600 }}
               onSubscribe={this.onSubscribe}
               onError={this.onSubscribeError}
               eventHandlers={this.subscriberEventHandlers}
