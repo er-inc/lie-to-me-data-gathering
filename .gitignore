@@ -23,3 +23,5 @@ yarn-error.log*
 log/*
 tmp/*
 .byebug_history
+
+package-lock.json

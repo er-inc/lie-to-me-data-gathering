@@ -15,7 +15,8 @@ class Start extends React.Component {
       sessionId: null,
       token: null,
       apiKey: null,
-      isInterviewer: null
+      isInterviewer: null,
+      lies: null
     }
   }
 
@@ -40,16 +41,21 @@ class Start extends React.Component {
   makeStartRequests() {
     this.setState({ requestInProgress: true })
       //TODO: Replace with correct URL
-    axios.get('https://api.github.com/users/danielaRiesgo')
+    axios.post('https://lie-to-me-data-gathering-back.herokuapp.com/study_sessions/connect', {
+        friendly_id: this.state.sessionCode,
+        email: this.state.email
+      })
       .then(response => this.setState({
           requestInProgress: false,
           requestFulfilled: true,
           //username: response.data.name,
-          sessionId: '2_MX40NjE3ODUwMn5-MTU0Mzk2Nzk4MzMxNH5UVTduRWJkem14U2lrREt6aTVvWXJyQW1-fg',
+          sessionId: response.data.otk_session_id,
+          token: this.state.email === response.data.interviewer ? response.data.otk_token_interviewer : response.data.otk_token_interviewed,
           apiKey: '46178502',
-          token: 'T1==cGFydG5lcl9pZD00NjE3ODUwMiZzaWc9ZmFiMTg3MjI2YmYyOGU1OGE0MGI1MmUyMWIwMWM4YWE0MGUxNTBmYjpyb2xlPXB1Ymxpc2hlciZzZXNzaW9uX2lkPTJfTVg0ME5qRTNPRFV3TW41LU1UVTBNemsyTnprNE16TXhOSDVVVlRkdVJXSmtlbTE0VTJsclJFdDZhVFZ2V1hKeVFXMS1mZyZjcmVhdGVfdGltZT0xNTQzOTY3OTk0Jm5vbmNlPTAuODg5NTQ4ODI4NTI1ODUwOA==',
-          isInterviewer: true
+          isInterviewer: this.state.email === response.data.interviewer,
+          lies: response.data.lies
       }))
+      .catch(error => console.log(error))
   }
 
   render() {
