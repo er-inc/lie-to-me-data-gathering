@@ -67,7 +67,6 @@ class Start extends React.Component {
             sessionId: response.data.otk_session_id,
             isInterviewer: isInterviewer,
             token: isInterviewer ? response.data.otk_token_interviewer : response.data.otk_token_interviewed,
-            apiKey: '46178502',
             shouldLie: response.data.lies
         })
       }
