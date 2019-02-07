@@ -12,58 +12,82 @@ class Start extends React.Component {
       email: '',
       requestInProgress: false,
       requestFulfilled: false,
+      requestFailed: false,
       sessionId: null,
       token: null,
       apiKey: null,
       isInterviewer: null,
-      lies: null
+      shouldLie: null
     }
   }
 
   updateSessionInputValue(session) {
-    this.setState({
-      sessionCode: session
-    });
+    if (!this.state.requestInProgress) {
+      this.setState({
+        sessionCode: session
+      });
+    }
   }
 
   updateEmailInputValue(email) {
-    this.setState({
-      email: email
-    });
+    if (!this.state.requestInProgress) {
+      this.setState({
+        email: email
+      });
+    }
   }
 
   acceptExperiment() {
     this.setState({
       conditionsAccepted: true
-    })
+    });
   }
 
   makeStartRequests() {
-    this.setState({ requestInProgress: true })
-      //TODO: Replace with correct URL
+    this.setState({ requestInProgress: true, requestFulfilled: false, requestFailed: false });
     axios.post('https://lie-to-me-data-gathering-back.herokuapp.com/study_sessions/connect', {
         friendly_id: this.state.sessionCode,
         email: this.state.email
       })
-      .then(response => this.setState({
-          requestInProgress: false,
-          requestFulfilled: true,
-          //username: response.data.name,
-          sessionId: response.data.otk_session_id,
-          token: this.state.email === response.data.interviewer ? response.data.otk_token_interviewer : response.data.otk_token_interviewed,
-          apiKey: '46178502',
-          isInterviewer: this.state.email === response.data.interviewer,
-          lies: response.data.lies
-      }))
-      .catch(error => console.log(error))
+      .then(response => {
+        var isInterviewer = this.state.email === response.data.interviewer;
+        var isInterviewed = this.state.email === response.data.interviewed;
+        if (!(isInterviewer || isInterviewed)) {
+          console.log("The person is neither interviewer nor interviewed");
+          this.setState({
+              requestInProgress: false,
+              requestFulfilled: true,
+              requestFailed: true,
+          })
+        } else {
+          this.setState({
+            requestInProgress: false,
+            requestFulfilled: true,
+            requestFailed: false,
+            sessionId: response.data.otk_session_id,
+            isInterviewer: isInterviewer,
+            token: isInterviewer ? response.data.otk_token_interviewer : response.data.otk_token_interviewed,
+            apiKey: '46178502',
+            shouldLie: response.data.lies
+        })
+      }
+      })
+      .catch(error => {
+        console.log(error.response);
+        this.setState({
+            requestInProgress: false,
+            requestFulfilled: true,
+            requestFailed: true,
+        });
+      });
   }
 
   render() {
     const location = {
       pathname: `/session/${this.state.sessionCode}/${this.state.isInterviewer ? 'interviewer' : 'interviewee'}/instructions`,
       state: { token: this.state.token, apiKey: this.state.apiKey, sessionId: this.state.sessionId }
-    }
-    if (this.state.requestFulfilled) {
+    };
+    if (this.state.requestFulfilled && !this.state.requestFailed) {
       return <Redirect push to={ location } />;
     }
     return (
@@ -112,6 +136,9 @@ class Start extends React.Component {
         <br/>
         { this.state.requestInProgress &&
           <ReactLoading className="loader" type="spinningBubbles" color="#000000" />
+        }
+        { this.state.requestFailed &&
+          <strong>Esas credenciales no parecen estar bien, por favor chequealas y volvé a intentar.</strong>
         }
       </div>
     )
